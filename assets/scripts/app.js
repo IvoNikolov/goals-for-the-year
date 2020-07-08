@@ -5,6 +5,8 @@ const cancelAddGoalButton = addGoalModal.querySelector('.btn--passive');
 const confirmAddGoalButton = cancelAddGoalButton.nextElementSibling;
 const userInputs = addGoalModal.querySelectorAll('input');
 const entryTextSection = document.getElementById('entry-text');
+const deleteGoalModal = document.getElementById('delete-modal');
+
 
 const goals = [];
 
@@ -16,7 +18,33 @@ const updateUI = () => {
     }
   };
 
-const renderNewGoalElement = (goal, description, rating) => {
+  const deleteGoal = goalId => {
+    let goalIndex = 0;
+    for(const goal of goals) {
+        if(goal.id === goalId) {
+            break;
+        }
+        goalIndex++;
+    }
+
+    goals.splice(goalIndex, 1);
+    const listRoot = document.getElementById('goal-list');
+    listRoot.children[goalIndex].remove();
+  };
+
+  const closeGoalDeletionModal = () => {
+      toggleBackdrop();
+      deleteGoalModal.classList.remove('visible');
+  }
+  
+  const deleteGoalHandler = goalId => {
+    const deleteGoalModal = document.getElementById('delete-modal');
+    deleteGoalModal.classList.add('visible');
+    toggleBackdrop();
+    // deleteGoal(goalId);
+ }
+
+const renderNewGoalElement = (id, goal, description, rating) => {
     const newGoalElement = document.createElement('li');
     newGoalElement.className = 'goal-element';
     newGoalElement.innerHTML = `
@@ -27,6 +55,8 @@ const renderNewGoalElement = (goal, description, rating) => {
         </div>
     `;
 
+    newGoalElement.addEventListener('click', deleteGoalHandler.bind(null, id)); 
+
     const listRoot = document.getElementById('goal-list');
     listRoot.append(newGoalElement);
 }
@@ -35,8 +65,12 @@ const toggleBackdrop = () => {
   backdrop.classList.toggle('visible');
 };
 
-const toggleGoalModal = () => {
-  addGoalModal.classList.toggle('visible');
+const closeGoalModal = () => {
+    addGoalModal.classList.remove('visible');
+}
+
+const showGoalModal = () => {
+  addGoalModal.classList.add('visible');
   toggleBackdrop();
 };
 
@@ -48,7 +82,7 @@ const clearInputsHandler = () => {
   
 
 const cancelAddGoalHandler = () => {
-  toggleGoalModal();
+  closeGoalModal();
   clearInputsHandler();
 };
 
@@ -70,24 +104,27 @@ const addGoalHandler = () => {
   }
 
   const newGoal = {
+      id: Math.random().toString(),
       goal: goalValue,
       description: descriptionValue,
       rating: ratingValue
   }
 
     goals.push(newGoal);
-    toggleGoalModal();
+    closeGoalModal();
+    toggleBackdrop();
     clearInputsHandler();
-    renderNewGoalElement(newGoal.goal, newGoal.description, newGoal.rating);
+    renderNewGoalElement(newGoal.id,newGoal.goal, newGoal.description, newGoal.rating);
     updateUI();
 };
 
 const backdropClickHandler = () => {
-  toggleGoalModal();
-  clearInputsHandler();
+  closeGoalModal();
+  // clearInputsHandler();
+  closeGoalDeletionModal();
 };
 
-startAddGoalButton.addEventListener('click', toggleGoalModal);
+startAddGoalButton.addEventListener('click', showGoalModal);
 backdrop.addEventListener('click', backdropClickHandler);
 cancelAddGoalButton.addEventListener('click', cancelAddGoalHandler);
 confirmAddGoalButton.addEventListener('click', addGoalHandler);
