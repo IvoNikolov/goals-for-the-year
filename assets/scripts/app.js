@@ -32,15 +32,25 @@ const updateUI = () => {
     listRoot.children[goalIndex].remove();
   };
 
+  const cancelGoalDeletion = () => {
+      toggleBackdrop();
+      deleteGoalModal.classList.remove('visible');
+  }
+
   const closeGoalDeletionModal = () => {
       toggleBackdrop();
       deleteGoalModal.classList.remove('visible');
   }
   
-  const deleteGoalHandler = goalId => {
-    const deleteGoalModal = document.getElementById('delete-modal');
+  const startDeleteGoalHandler = goalId => {
+    // const deleteGoalModal = document.getElementById('delete-modal');
     deleteGoalModal.classList.add('visible');
     toggleBackdrop();
+    const cancelDeletionButton = deleteGoalModal.querySelector('btn--passive');
+    const confirmDeletionButton = deleteGoalModal.querySelector('btn--danger');
+
+    cancelDeletionButton.addEventListener('click', closeGoalDeletionModal);
+    confirmDeletionButton.addEventListener('click', deleteGoal.bind(null, goalId));
     // deleteGoal(goalId);
  }
 
@@ -55,7 +65,7 @@ const renderNewGoalElement = (id, goal, description, rating) => {
         </div>
     `;
 
-    newGoalElement.addEventListener('click', deleteGoalHandler.bind(null, id)); 
+    newGoalElement.addEventListener('click', startDeleteGoalHandler.bind(null, id)); 
 
     const listRoot = document.getElementById('goal-list');
     listRoot.append(newGoalElement);
@@ -120,8 +130,8 @@ const addGoalHandler = () => {
 
 const backdropClickHandler = () => {
   closeGoalModal();
-  // clearInputsHandler();
   closeGoalDeletionModal();
+  
 };
 
 startAddGoalButton.addEventListener('click', showGoalModal);
