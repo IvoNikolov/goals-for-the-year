@@ -43,7 +43,6 @@ const updateUI = () => {
   }
   
   const startDeleteGoalHandler = goalId => {
-    // const deleteGoalModal = document.getElementById('delete-modal');
     deleteGoalModal.classList.add('visible');
     toggleBackdrop();
     const cancelDeletionButton = deleteGoalModal.querySelector('btn--passive');
