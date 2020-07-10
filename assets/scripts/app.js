@@ -51,7 +51,6 @@ const updateUI = () => {
 
     cancelDeletionButton.addEventListener('click', closeGoalDeletionModal);
     confirmDeletionButton.addEventListener('click', deleteGoal.bind(null, goalId));
-    // deleteGoal(goalId);
  }
 
 const renderNewGoalElement = (id, goal, description, rating) => {
